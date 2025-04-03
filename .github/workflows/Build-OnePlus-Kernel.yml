@@ -119,7 +119,7 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s susfs-v1.5.5
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
-            curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
+            curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-stable
           fi
           
       - name: Apply SUSFS Patches KernelSU
@@ -154,7 +154,9 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             cd KernelSU
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
-            cd KernelSU
+            cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
+            cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
+            cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
           fi
           
           cd ../common
