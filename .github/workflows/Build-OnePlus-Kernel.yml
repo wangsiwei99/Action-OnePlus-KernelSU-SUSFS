@@ -159,6 +159,9 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             cd KernelSU
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
+            cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
+            cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
+            cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
             cd KernelSU
           fi
           
@@ -193,7 +196,7 @@ jobs:
 
           if [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
              echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./common/arch/arm64/configs/gki_defconfig
-             #echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
+             echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
           fi
 
           echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
