@@ -233,14 +233,15 @@ jobs:
          fi
 
          if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" ]]; then
-         if [[ "${{ github.event.inputs.KERNEL_VER }}" == "default" ]]; then
-            KSU_VERSION=$(( $(git rev-list --count HEAD) + 10200 ))
+           if [[ "${{ github.event.inputs.KERNEL_VER }}" == "default" ]]; then
+              KSU_VERSION=$(( $(git rev-list --count HEAD) + 10200 ))
          else
-            KSU_VERSION=${{ github.event.inputs.KERNEL_VER }}
+              KSU_VERSION=${{ github.event.inputs.KERNEL_VER }}
          fi
 
-         sed -i "s/DKSU_VERSION=${DEFAULT_VERSION}/DKSU_VERSION=${KSU_VERSION}/" "${MAKE_FILE}"
-         echo "KSUVER=${KSU_VERSION}" >> $GITHUB_ENV
+           sed -i "s/DKSU_VERSION=${DEFAULT_VERSION}/DKSU_VERSION=${KSU_VERSION}/" "${MAKE_FILE}"
+           echo "KSUVER=${KSU_VERSION}" >> $GITHUB_ENV
+         fi
 
       - name: Add make name
         run: |
