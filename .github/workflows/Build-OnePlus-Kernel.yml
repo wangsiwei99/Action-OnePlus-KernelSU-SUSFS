@@ -40,6 +40,7 @@ on:
           - MKSU
           - RKSU
           - SKSU
+          - SKSU-U
         default: KSU
       kernelsu_version:
         description: "选择 KSU 版本"
@@ -120,18 +121,25 @@ jobs:
             curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s susfs-v1.5.5
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
             curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
+          elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
+            curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
           fi
           
       - name: Apply SUSFS Patches KernelSU
         if: github.event.inputs.SUSFS_ENABLED == 'true'
         run: |
           cd kernel_workspace
-          git clone https://gitlab.com/simonpunk/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
-          git clone https://github.com/TanakaLun/kernel_patches4mksu.git
-          cd kernel_platform
-          cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}.patch ./common/
-          cp ../susfs4ksu/kernel_patches/fs/* ./common/fs/
-          cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
+          if [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
+            git clone https://gitlab.com/simonpunk/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
+            git clone https://github.com/ShirkNeko/SukiSU_patch.git
+          else
+            git clone https://gitlab.com/simonpunk/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
+            git clone https://github.com/TanakaLun/kernel_patches4mksu.git
+          fi
+            cd kernel_platform
+            cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}.patch ./common/
+            cp ../susfs4ksu/kernel_patches/fs/* ./common/fs/
+            cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
           
           if [ "${{ github.event.inputs.kernelsu_variant }}" == "KSU" ]; then
             cp ../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch ./KernelSU
@@ -154,6 +162,8 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             cd KernelSU
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
+            cd KernelSU
+          elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
             cd KernelSU
           fi
           
@@ -181,8 +191,9 @@ jobs:
 
           if [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
              echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./common/arch/arm64/configs/gki_defconfig
-          else
-             echo "CONFIG_KSU_WITH_KPROBES=n" >> ./common/arch/arm64/configs/gki_defconfig
+          elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
+             echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./common/arch/arm64/configs/gki_defconfig
+             echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
           fi
 
           echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
@@ -213,13 +224,16 @@ jobs:
          elif [[ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]]; then
             cd ./KernelSU
             KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 12606)
+         elif [[ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]]; then
+            cd ./KernelSU
+            KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 12506)
          else
             cd kernel_workspace/kernel_platform/KernelSU
             MAKE_FILE="kernel/Makefile"
             DEFAULT_VERSION=16    
          fi
 
-         if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" ]]; then
+         if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" || "${{ github.event.inputs.kernelsu_variant }}" != "SUKSU-U" ]]; then
          if [[ "${{ github.event.inputs.KERNEL_VER }}" == "default" ]]; then
             KSU_VERSION=$(( $(git rev-list --count HEAD) + 10200 ))
          else
