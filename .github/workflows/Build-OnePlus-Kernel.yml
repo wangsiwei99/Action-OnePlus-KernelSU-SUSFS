@@ -119,7 +119,7 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s susfs-v1.5.5
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]; then
-            curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-stable
+            curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
           fi
           
       - name: Apply SUSFS Patches KernelSU
@@ -210,12 +210,16 @@ jobs:
             cd kernel_workspace/kernel_platform/KernelSU-Next
             MAKE_FILE="kernel/Makefile"
             DEFAULT_VERSION=11998
+         elif [[ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" ]]; then
+            cd ./KernelSU
+            KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 12606)
          else
             cd kernel_workspace/kernel_platform/KernelSU
             MAKE_FILE="kernel/Makefile"
             DEFAULT_VERSION=16    
          fi
 
+         if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" ]]; then
          if [[ "${{ github.event.inputs.KERNEL_VER }}" == "default" ]]; then
             KSU_VERSION=$(( $(git rev-list --count HEAD) + 10200 ))
          else
