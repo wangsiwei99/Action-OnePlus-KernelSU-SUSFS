@@ -170,7 +170,6 @@ jobs:
           cd ../common
           patch -p1 < 50_add_susfs_in_gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}.patch || true
           if [ "${{ github.event.inputs.kernelsu_variant }}" = "SKSU" ] || [ "${{ github.event.inputs.kernelsu_variant }}" = "SUKSU-U" ]; then
-            cd kernel_workspace/kernel_platform/common
             cp ../../SukiSU_patch/69_hide_stuff.patch ./
             patch -p1 -F 3 < 69_hide_stuff.patch
           fi
