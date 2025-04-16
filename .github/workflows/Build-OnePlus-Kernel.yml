@@ -158,9 +158,9 @@ jobs:
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "RKSU" ]; then
             cd KernelSU
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
-            cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
-            cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
-            cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
+            #cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
+            #cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
+            #cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
             cd KernelSU
           fi
           
@@ -186,8 +186,8 @@ jobs:
          elif [ "${{ github.event.inputs.kernelsu_variant }}" = "SKSU-U" ]; then
             cp ../../SukiSU_patch/hooks/syscall_hooks.patch ./
             patch -p1 -F 3 < syscall_hooks.patch
-            cp ../../SukiSU_patch/other/lz4k_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
-            patch -p1 -F 3 < lz4kd.patch || true
+            #cp ../../SukiSU_patch/other/lz4k_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
+            #patch -p1 -F 3 < lz4kd.patch || true
          fi
 
       - name: Add SUSFS Configuration Settings
