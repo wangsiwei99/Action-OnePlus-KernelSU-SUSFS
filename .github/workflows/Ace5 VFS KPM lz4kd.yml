@@ -86,7 +86,6 @@ jobs:
         if: ${{ github.event.inputs.VFS_lz4kd == 'true' }}
         run: |
           cd kernel_workspace
-            git clone https://gitlab.com/shirkneko/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
             git clone https://github.com/ShirkNeko/SukiSU_patch.git
             cd kernel_platform
             cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
@@ -110,7 +109,6 @@ jobs:
 
             echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_KSU_SUSFS_SUS_SU=n" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_CRYPTO_LZ4K=y" >> ./common/arch/arm64/configs/gki_defconfig
