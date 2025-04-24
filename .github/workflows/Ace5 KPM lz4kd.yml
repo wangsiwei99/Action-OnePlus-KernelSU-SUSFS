@@ -1,4 +1,4 @@
-name: Ace5 KPM lz4kd(SukiSU-Ultra)
+name: Ace5 VFS KPM lz4kd(SukiSU-Ultra)
 on:
   workflow_dispatch:
     inputs:
