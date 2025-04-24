@@ -82,10 +82,13 @@ jobs:
           export KSU_VERSION=$KSU_VERSION
           sed -i "s/DKSU_VERSION=12800/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
 
-      - name: Apply lz4kd Patches KernelSU
+      - name: Apply lz4kd Patches SukiSU-Ultra
+        if: ${{ github.event.inputs.VFS_lz4kd == 'true' }}
         run: |
           cd kernel_workspace
+            git clone https://gitlab.com/shirkneko/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
             git clone https://github.com/ShirkNeko/SukiSU_patch.git
+            cd kernel_platform
             cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
             cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
             cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
