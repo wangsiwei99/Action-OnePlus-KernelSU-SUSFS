@@ -1,4 +1,4 @@
-name: Ace5 VFS KPM lz4kd(SukiSU-Ultra)
+name: Ace5 KPM lz4kd(SukiSU-Ultra)
 on:
   workflow_dispatch:
     inputs:
@@ -26,8 +26,8 @@ on:
         description: "自定义内核名称"
         required: true
         default: '-android14-11-KFzZ'
-      VFS_lz4kd:
-        description: "启用VFS Hooks和lz4kd"
+      lz4kd:
+        description: "启用lz4kd"
         required: true
         type: boolean
         default: true
@@ -83,23 +83,19 @@ jobs:
           sed -i "s/DKSU_VERSION=12800/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
           
 
-      - name: Apply VFS Hooks and lz4kd Patches
-        if: ${{ github.event.inputs.VFS_lz4kd == 'true' }}
+      - name: Apply lz4kd Patches
+        if: ${{ github.event.inputs.lz4kd == 'true' }}
         run: |
          cd kernel_workspace/kernel_platform/common
-            cp ../../SukiSU_patch/hooks/syscall_hooks.patch ./
-            patch -p1 -F 3 < syscall_hooks.patch
             cp ../../SukiSU_patch/other/lz4k_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
             patch -p1 -F 3 < lz4kd.patch || true
 
-      - name: Add VFS and lz4kd Configuration Settings
-        if: ${{ github.event.inputs.VFS_lz4kd == 'true' }}
+      - name: Add lz4kd Configuration Settings
+        if: ${{ github.event.inputs.lz4kd == 'true' }}
         run: |
          cd kernel_workspace/kernel_platform
 
             echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_KSU_SUSFS_SUS_SU=n" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/gki_defconfig
             echo "CONFIG_CRYPTO_LZ4K=y" >> ./common/arch/arm64/configs/gki_defconfig
