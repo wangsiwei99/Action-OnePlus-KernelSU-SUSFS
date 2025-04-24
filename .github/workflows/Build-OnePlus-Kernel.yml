@@ -52,9 +52,9 @@ on:
         type: boolean
         default: true
       VFS:
-        type: boolean
-        description: "启用 VFS Hooks"
+        description: "添加 VFS Hooks"
         required: true
+        type: boolean
         default: true
 jobs:
   build:
