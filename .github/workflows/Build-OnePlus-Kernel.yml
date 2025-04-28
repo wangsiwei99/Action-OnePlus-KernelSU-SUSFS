@@ -275,7 +275,7 @@ jobs:
             DEFAULT_VERSION=16    
          fi
 
-         if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" || "${{ github.event.inputs.kernelsu_variant }}" != "SKSU-U" ]]; then
+         if [[ "${{ github.event.inputs.kernelsu_variant }}" != "SKSU" && "${{ github.event.inputs.kernelsu_variant }}" != "SKSU-U" ]]; then
               KSU_VERSION=$(( $(git rev-list --count HEAD) + 10200 ))
             fi
 
