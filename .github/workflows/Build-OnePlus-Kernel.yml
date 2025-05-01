@@ -122,7 +122,6 @@ jobs:
             curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
           elif [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
             curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
-            cd ./KernelSU
           fi
           
       - name: Apply SUSFS Patches KernelSU
