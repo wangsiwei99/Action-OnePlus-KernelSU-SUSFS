@@ -76,11 +76,6 @@ jobs:
         run: |
           cd kernel_workspace/kernel_platform
           curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
-          cd ./KernelSU
-          KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 10606)
-          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
-          export KSU_VERSION=$KSU_VERSION
-          sed -i "s/DKSU_VERSION=12800/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
 
       - name: Apply lz4kd Patches SukiSU-Ultra
         if: ${{ github.event.inputs.lz4kd == 'true' }}
