@@ -1,4 +1,4 @@
-name: Ace5 KPM lz4kd(SukiSU-Ultra)
+name: Ace5 KPM lz4kd(SukiSU Ultra)
 on:
   workflow_dispatch:
     inputs:
@@ -72,17 +72,16 @@ jobs:
          sed -i 's/ -dirty//g' kernel_platform/common/scripts/setlocalversion
          sed -i 's/ -dirty//g' kernel_platform/msm-kernel/scripts/setlocalversion
 
-      - name: Add SukiSU-Ultra
+      - name: Add SukiSU Ultra
         run: |
           cd kernel_workspace/kernel_platform
-          curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
-
-      - name: Apply lz4kd Patches SukiSU-Ultra
+          curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
+          
+      - name: Apply SUSFS Patches KernelSU
         if: ${{ github.event.inputs.lz4kd == 'true' }}
         run: |
           cd kernel_workspace
             git clone https://github.com/ShirkNeko/SukiSU_patch.git
-            cd kernel_platform
             cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
             cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
             cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
@@ -94,22 +93,21 @@ jobs:
          cd kernel_workspace/kernel_platform/common
             cp ../../SukiSU_patch/other/lz4k_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
             patch -p1 -F 3 < lz4kd.patch || true
+         fi
 
-      - name: Add lz4kd Configuration Settings
+      - name: Add KPM lz4kd Configuration Settings
         if: ${{ github.event.inputs.lz4kd == 'true' }}
         run: |
          cd kernel_workspace/kernel_platform
-
-            echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_CRYPTO_LZ4K=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_CRYPTO_LZ4KD=y" >> ./common/arch/arm64/configs/gki_defconfig
-            echo "CONFIG_CRYPTO_842=y" >> ./common/arch/arm64/configs/gki_defconfig
-
-          sed -i 's/check_defconfig//' ./common/build.config.gki
-      
-      - name: Handle KernelSU Version
+         echo "CONFIG_KSU=y" >> ./common/arch/arm64/configs/gki_defconfig
+         echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
+         echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/gki_defconfig
+         echo "CONFIG_CRYPTO_LZ4K=y" >> ./common/arch/arm64/configs/gki_defconfig
+         echo "CONFIG_CRYPTO_LZ4KD=y" >> ./common/arch/arm64/configs/gki_defconfig
+         echo "CONFIG_CRYPTO_842=y" >> ./common/arch/arm64/configs/gki_defconfig
+         sed -i 's/check_defconfig//' ./common/build.config.gki
+          
+      - name: Handle SukiSU Ultra Version
         run: |
             cd kernel_workspace/kernel_platform/KernelSU
             MAKE_FILE="kernel/Makefile"
@@ -169,6 +167,7 @@ jobs:
           fi
 
       - name: Apply patch_linux and replace Image
+        if: ${{ github.event.inputs.kernelsu_variant == 'SKSU-U' }}
         run: |
           cd kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-gki/dist
           curl -LO https://github.com/ShirkNeko/SukiSU_KernelPatch_patch/releases/download/0.11-beta/patch_linux
