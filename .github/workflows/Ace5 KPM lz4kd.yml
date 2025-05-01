@@ -113,6 +113,15 @@ jobs:
             echo "CONFIG_CRYPTO_842=y" >> ./common/arch/arm64/configs/gki_defconfig
 
           sed -i 's/check_defconfig//' ./common/build.config.gki
+      
+      - name: Handle KernelSU Version
+        run: |
+            cd kernel_workspace/kernel_platform/KernelSU
+            MAKE_FILE="kernel/Makefile"
+            DEFAULT_VERSION=12800
+            KSU_VERSION=$(expr $(git rev-list --count main) + 10606)
+            sed -i "s/DKSU_VERSION=${DEFAULT_VERSION}/DKSU_VERSION=${KSU_VERSION}/" "${MAKE_FILE}"
+            echo "KSUVER=${KSU_VERSION}" >> $GITHUB_ENV
 
       - name: Add make name
         run: |
