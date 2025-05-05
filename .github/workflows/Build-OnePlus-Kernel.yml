@@ -129,7 +129,7 @@ jobs:
         run: |
           cd kernel_workspace
           if [[ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU" || "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]]; then
-            git clone https://gitlab.com/shirkneko/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
+            git clone https://github.com/ShirkNeko/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
             git clone https://github.com/ShirkNeko/SukiSU_patch.git
           else
             git clone https://gitlab.com/simonpunk/susfs4ksu.git -b gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}
