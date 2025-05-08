@@ -196,52 +196,52 @@ jobs:
 
           if [ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]; then
             echo "CONFIG_KPM=y" >> ./common/arch/arm64/configs/gki_defconfig
-          if [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.10" ]; then
-              echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
-              echo "CONFIG_ZRAM=y" >> ./common/arch/arm64/configs/gki_defconfig
-              echo "CONFIG_MODULE_SIG=n" >> ./common/arch/arm64/configs/gki_defconfig
-              echo "CONFIG_CRYPTO_LZO=y" >> ./common/arch/arm64/configs/gki_defconfig
-              echo "CONFIG_ZRAM_DEF_COMP_LZ4KD=y" >> ./common/arch/arm64/configs/gki_defconfig
-            fi
+          #if [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.10" ]; then
+          #    echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #    echo "CONFIG_ZRAM=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #    echo "CONFIG_MODULE_SIG=n" >> ./common/arch/arm64/configs/gki_defconfig
+          #    echo "CONFIG_CRYPTO_LZO=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #    echo "CONFIG_ZRAM_DEF_COMP_LZ4KD=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #  fi
 
-            if [ "${{ github.event.inputs.KERNEL_VERSION }}" != "6.6" ] && [ "${{ github.event.inputs.KERNEL_VERSION }}" != "5.10" ]; then
-              if grep -q "CONFIG_ZSMALLOC" -- ./common/arch/arm64/configs/gki_defconfig; then
-                sed -i 's/CONFIG_ZSMALLOC=m/CONFIG_ZSMALLOC=y/g' ./common/arch/arm64/configs/gki_defconfig
-              else
-                echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
-              fi
-              sed -i 's/CONFIG_ZRAM=m/CONFIG_ZRAM=y/g' ./common/arch/arm64/configs/gki_defconfig
-            fi
+          #  if [ "${{ github.event.inputs.KERNEL_VERSION }}" != "6.6" ] && [ "${{ github.event.inputs.KERNEL_VERSION }}" != "5.10" ]; then
+          #    if grep -q "CONFIG_ZSMALLOC" -- ./common/arch/arm64/configs/gki_defconfig; then
+          #      sed -i 's/CONFIG_ZSMALLOC=m/CONFIG_ZSMALLOC=y/g' ./common/arch/arm64/configs/gki_defconfig
+          #    else
+          #      echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #    fi
+          #    sed -i 's/CONFIG_ZRAM=m/CONFIG_ZRAM=y/g' ./common/arch/arm64/configs/gki_defconfig
+          #  fi
 
-            if [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.6" ]; then
-              echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
-              sed -i 's/CONFIG_ZRAM=m/CONFIG_ZRAM=y/g' ./common/arch/arm64/configs/gki_defconfig
-            fi
+          #  if [ "${{ github.event.inputs.KERNEL_VERSION }}" = "6.6" ]; then
+          #    echo "CONFIG_ZSMALLOC=y" >> ./common/arch/arm64/configs/gki_defconfig
+          #    sed -i 's/CONFIG_ZRAM=m/CONFIG_ZRAM=y/g' ./common/arch/arm64/configs/gki_defconfig
+          #  fi
 
-            if [ "${{ github.event.inputs.ANDROID_VERSION }}" = "android14" ] || [ "${{ github.event.inputs.ANDROID_VERSION }}" = "android15" ]; then
-              if [  -e ./common/modules.bzl ]; then
-                sed -i 's/"drivers\/block\/zram\/zram\.ko",//g; s/"mm\/zsmalloc\.ko",//g' "./common/modules.bzl"
-              fi
+          #  if [ "${{ github.event.inputs.ANDROID_VERSION }}" = "android14" ] || [ "${{ github.event.inputs.ANDROID_VERSION }}" = "android15" ]; then
+          #    if [  -e ./common/modules.bzl ]; then
+          #      sed -i 's/"drivers\/block\/zram\/zram\.ko",//g; s/"mm\/zsmalloc\.ko",//g' "./common/modules.bzl"
+          #    fi
 
-              if [  -e ./msm-kernel/modules.bzl ]; then
-                sed -i 's/"drivers\/block\/zram\/zram\.ko",//g; s/"mm\/zsmalloc\.ko",//g' "./msm-kernel/modules.bzl"
-                echo "CONFIG_ZSMALLOC=y" >> "msm-kernel/arch/arm64/configs/${{ github.event.inputs.CPUD }}-GKI.config"
-                echo "CONFIG_ZRAM=y" >> "msm-kernel/arch/arm64/configs/${{ github.event.inputs.CPUD }}-GKI.config"
-              fi
+          #    if [  -e ./msm-kernel/modules.bzl ]; then
+          #      sed -i 's/"drivers\/block\/zram\/zram\.ko",//g; s/"mm\/zsmalloc\.ko",//g' "./msm-kernel/modules.bzl"
+          #      echo "CONFIG_ZSMALLOC=y" >> "msm-kernel/arch/arm64/configs/${{ github.event.inputs.CPUD }}-GKI.config"
+          #      echo "CONFIG_ZRAM=y" >> "msm-kernel/arch/arm64/configs/${{ github.event.inputs.CPUD }}-GKI.config"
+          #    fi
               
-              echo "CONFIG_MODULE_SIG_FORCE=n" >> ./common/arch/arm64/configs/gki_defconfig
-            elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.10" ] || [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.15" ]; then
-              rm "common/android/gki_aarch64_modules"
-              touch "common/android/gki_aarch64_modules"
-            fi
+          #    echo "CONFIG_MODULE_SIG_FORCE=n" >> ./common/arch/arm64/configs/gki_defconfig
+          #  elif [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.10" ] || [ "${{ github.event.inputs.KERNEL_VERSION }}" = "5.15" ]; then
+          #    rm "common/android/gki_aarch64_modules"
+          #    touch "common/android/gki_aarch64_modules"
+          #  fi
 
-            if grep -q "CONFIG_ZSMALLOC=y" ./common/arch/arm64/configs/gki_defconfig && grep -q "CONFIG_ZRAM=y" ./common/arch/arm64/configs/gki_defconfig; then
+          #  if grep -q "CONFIG_ZSMALLOC=y" ./common/arch/arm64/configs/gki_defconfig && grep -q "CONFIG_ZRAM=y" ./common/arch/arm64/configs/gki_defconfig; then
               echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/gki_defconfig
               echo "CONFIG_CRYPTO_LZ4K=y" >> ./common/arch/arm64/configs/gki_defconfig
               echo "CONFIG_CRYPTO_LZ4KD=y" >> ./common/arch/arm64/configs/gki_defconfig
               echo "CONFIG_CRYPTO_842=y" >> ./common/arch/arm64/configs/gki_defconfig
             fi
-          fi
+          #fi
           
 
           if [ "${{ github.event.inputs.VFS }}" == 'true' ]; then
