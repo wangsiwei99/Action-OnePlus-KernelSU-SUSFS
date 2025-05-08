@@ -185,6 +185,7 @@ jobs:
          if [[ "${{ github.event.inputs.kernelsu_variant }}" == "SKSU-U" ]]; then
             cp ../../SukiSU_patch/other/zram/zram_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
             patch -p1 -F 3 < lz4kd.patch || true
+          fi
          fi
 
       - name: Add SUSFS Configuration Settings
