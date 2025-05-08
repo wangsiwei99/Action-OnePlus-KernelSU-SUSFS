@@ -307,24 +307,24 @@ jobs:
         if: ${{ github.event.inputs.CPU == 'sm8650' || github.event.inputs.CPU == 'sm7675' }}
         run: |
           cd kernel_workspace
-          ./kernel_platform/build_with_bazel.py -t ${{ github.event.inputs.CPUD }} ${{ github.event.inputs.BUILD_METHOD }}
+          ./kernel_platform/build_with_bazel.py -t ${{ github.event.inputs.CPUD }} gki
           
       - name: Fallback build kernel
         if: ${{ github.event.inputs.CPU != 'sm8650' && github.event.inputs.CPU != 'sm7675' }}
         run: |
          cd kernel_workspace
-         LTO=thin SYSTEM_DLKM_RE_SIGN=0 BUILD_SYSTEM_DLKM=0 KMI_SYMBOL_LIST_STRICT_MODE=0 ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ github.event.inputs.CPUD }} ${{ github.event.inputs.BUILD_METHOD }}
+         LTO=thin SYSTEM_DLKM_RE_SIGN=0 BUILD_SYSTEM_DLKM=0 KMI_SYMBOL_LIST_STRICT_MODE=0 ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ github.event.inputs.CPUD }} gki
 
       - name: Make AnyKernel3
         run: |
           git clone https://github.com/Numbersf/AnyKernel3 --depth=1
           rm -rf ./AnyKernel3/.git
 
-          dir1="kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.BUILD_METHOD }}/dist/"
+          dir1="kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-gki/dist/"
           dir2="kernel_workspace/kernel_platform/bazel-out/k8-fastbuild/bin/msm-kernel/${{ github.event.inputs.CPUD }}_gki_kbuild_mixed_tree/"
-          dir3="kernel_workspace/kernel_platform/out/msm-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.BUILD_METHOD }}/dist/"
-          dir4="kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.BUILD_METHOD }}/gki_kernel/common/arch/arm64/boot/"
-          dir5="kernel_workspace/kernel_platform/out/msm-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.BUILD_METHOD }}/gki_kernel/common/arch/arm64/boot/"
+          dir3="kernel_workspace/kernel_platform/out/msm-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.CPUD }}-gki/dist/"
+          dir4="kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-gki/gki_kernel/common/arch/arm64/boot/"
+          dir5="kernel_workspace/kernel_platform/out/msm-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.CPUD }}-gki/gki_kernel/common/arch/arm64/boot/"
           target1="./AnyKernel3/"
           target2="./kernel_workspace/kernel"
 
@@ -376,7 +376,7 @@ jobs:
       - name: Apply patch_linux and replace Image
         if: ${{ github.event.inputs.KPM == 'true' }}
         run: |
-          cd /home/runner/work/Action_OnePlus_MKSU_SUSFS/Action_OnePlus_MKSU_SUSFS/kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-${{ github.event.inputs.BUILD_METHOD }}/dist
+          cd /home/runner/work/Action_OnePlus_MKSU_SUSFS/Action_OnePlus_MKSU_SUSFS/kernel_workspace/kernel_platform/out/msm-kernel-${{ github.event.inputs.CPUD }}-gki/dist
           curl -LO https://github.com/ShirkNeko/SukiSU_KernelPatch_patch/releases/download/0.11-beta/patch_linux
           chmod +x patch_linux
           ./patch_linux
